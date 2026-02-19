@@ -11,6 +11,18 @@ Autodeploy is configured in `.github/workflows/deploy.yml` and runs on every pus
 Required GitHub secret:
 - `DEPLOY_SSH_PRIVATE_KEY` - private SSH key for server access (`root@85.198.65.128`).
 
+## Auth Environment
+
+Authentication form uses `https://swiftcore.network/api/lk/auth`.
+
+Local setup:
+
+1. Copy `.env.example` to `.env.local`.
+2. Fill values:
+   - `VITE_AUTH_API_URL`
+   - `VITE_AUTH_DEFAULT_EMAIL`
+   - `VITE_AUTH_DEFAULT_PASSWORD`
+
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
 Currently, two official plugins are available:
