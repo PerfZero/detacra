@@ -1,0 +1,215 @@
+{
+  "result": true,
+  "data": {
+    "user": {
+      "first_name": "Матвей",
+      "last_name": "Иванов",
+      "role_title": "админ",
+      "avatar": "https://www.gravatar.com/avatar/f8806c0a6def06806881f980edd93e9c6d971d78741018a94b76b6efd1a0d874?d=identicon&s=72"
+    },
+    "points": [
+      {
+        "title": "Мневники",
+        "online_status": true,
+        "is_active": true
+      },
+      {
+        "title": "Садовое кольцо",
+        "online_status": false,
+        "is_active": false
+      }
+    ],
+    "video": {
+      "enabled": true,
+      "cameras_active": 9,
+      "cameras_total": 12
+    },
+    "audio": {
+      "enabled": false,
+      "devices_active": 12
+    },
+    "reglaments": [
+      {
+        "title": "Мусор/Беспорядок",
+        "description": "На полу находится мусор",
+        "time": "14:00"
+      },
+      {
+        "title": "Мусор/Беспорядок",
+        "description": "На полу находится мусор",
+        "time": "15:00"
+      },
+      {
+        "title": "Мусор/Беспорядок",
+        "description": "На полу находится мусор",
+        "time": "16:00"
+      },
+      {
+        "title": "Мусор/Беспорядок",
+        "description": "На полу находится мусор",
+        "time": "17:00"
+      }
+    ],
+    "stock": [
+      {
+        "title": "Напиток Добрый",
+        "min": 12,
+        "in_stock": 15
+      },
+      {
+        "title": "Coca Cola",
+        "min": 12,
+        "in_stock": 10
+      },
+      {
+        "title": "Sprite",
+        "min": 12,
+        "in_stock": 15
+      },
+      {
+        "title": "adrenalie Rush",
+        "min": 12,
+        "in_stock": 4
+      }
+    ],
+    "active_incidents": [
+      {
+        "id": 5781,
+        "status": "new",
+        "title": "Беспорядок/Мусор",
+        "type": "camera",
+        "places": [
+          "#10",
+          "#11"
+        ],
+        "picture": "https://detectra.onedaycrm.ru/app/storage/180226/699651760aede.jpg",
+        "description": "Стул на рабочем месте отодвинут, просьба задвинуть"
+      },
+      {
+        "id": 5782,
+        "status": "new",
+        "title": "Проверка туалета",
+        "type": "reglament",
+        "places": [],
+        "picture": null,
+        "description": "Стул на рабочем месте отодвинут, просьба задвинуть"
+      },
+      {
+        "id": 5783,
+        "status": "new",
+        "title": "Беспорядок/Мусор",
+        "type": "camera",
+        "places": [
+          "#10",
+          "#11"
+        ],
+        "picture": "https://detectra.onedaycrm.ru/app/storage/180226/699651760aede.jpg",
+        "description": "Стул на рабочем месте отодвинут, просьба задвинуть"
+      }
+    ],
+    "failed_incidents": [
+      {
+        "id": 5784,
+        "status": "failed",
+        "title": "Беспорядок/Мусор",
+        "type": "camera",
+        "places": [
+          "#10",
+          "#11"
+        ],
+        "picture": "https://detectra.onedaycrm.ru/app/storage/180226/699651760aede.jpg",
+        "description": "Стул на рабочем месте отодвинут, просьба задвинуть"
+      },
+      {
+        "id": 5785,
+        "status": "failed",
+        "title": "Проверка туалета",
+        "type": "reglament",
+        "places": [],
+        "picture": null,
+        "description": "Стул на рабочем месте отодвинут, просьба задвинуть"
+      },
+      {
+        "id": 5786,
+        "status": "failed",
+        "title": "Беспорядок/Мусор",
+        "type": "camera",
+        "places": [
+          "#10",
+          "#11"
+        ],
+        "picture": "https://detectra.onedaycrm.ru/app/storage/180226/699651760aede.jpg",
+        "description": "Стул на рабочем месте отодвинут, просьба задвинуть"
+      },
+      {
+        "id": 5787,
+        "status": "failed",
+        "title": "Проверка туалета",
+        "type": "reglament",
+        "places": [],
+        "picture": null,
+        "description": "Стул на рабочем месте отодвинут, просьба задвинуть"
+      }
+    ],
+    "notifications": [
+      {
+        "id": 5784,
+        "status": "new",
+        "title": "Беспорядок/Мусор",
+        "type": "camera",
+        "places": [
+          "#10",
+          "#11"
+        ],
+        "device_title": "#38",
+        "picture": "https://detectra.onedaycrm.ru/app/storage/180226/699651760aede.jpg",
+        "description": "Стул на рабочем месте отодвинут, просьба задвинуть",
+        "staff": "Андрей Иванов"
+      },
+      {
+        "id": 5785,
+        "status": "cancelled",
+        "title": "Проверка туалета",
+        "type": "reglament",
+        "places": [],
+        "device_title": null,
+        "picture": null,
+        "description": "Стул на рабочем месте отодвинут, просьба задвинуть",
+        "staff": "Андрей Иванов"
+      },
+      {
+        "id": 5786,
+        "status": "failed",
+        "title": "Беспорядок/Мусор",
+        "type": "audio",
+        "places": [],
+        "device_title": "Микроф.1",
+        "picture": null,
+        "description": "Стул на рабочем месте отодвинут, просьба задвинуть",
+        "staff": "Ольга Никитина"
+      },
+      {
+        "id": 5787,
+        "status": "success_after_failed",
+        "title": "Проверка туалета",
+        "type": "reglament",
+        "places": [],
+        "device_title": null,
+        "picture": null,
+        "description": "Стул на рабочем месте отодвинут, просьба задвинуть",
+        "staff": "Андрей Иванов"
+      },
+      {
+        "id": 5788,
+        "status": "success",
+        "title": "Проверка туалета",
+        "type": "reglament",
+        "places": [],
+        "device_title": null,
+        "picture": null,
+        "description": "Стул на рабочем месте отодвинут, просьба задвинуть",
+        "staff": "Сергей Петров"
+      }
+    ]
+  }
+}

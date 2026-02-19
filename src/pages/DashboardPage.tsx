@@ -20,6 +20,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
+import dashboardPayload from "@/mocks/dashboard.json";
 import {
   Sidebar,
   SidebarContent,
@@ -83,91 +84,20 @@ type SummaryCard = {
   subtitleRight: string;
 };
 
-const pageItems: SidebarItem[] = [
-  { label: "Регламенты", icon: ClipboardCheck },
-  { label: "Аналитика", icon: ChartLine },
-  { label: "Аудио-аналитика", icon: ChartColumn },
-  { label: "Уведомления", icon: Bell, badge: 3 },
-  { label: "Сотрудники", icon: Users },
-  { label: "Витрина и склад", icon: ListTodo },
-];
-
-const summaryCards: SummaryCard[] = [
-  {
-    id: "cameras",
-    icon: Camera,
-    lead: "9",
-    badge: "Подключено",
-    title: "Камеры",
-    subtitleLeft: "9/12",
-    subtitleRight: "включены в помещении",
-  },
-  {
-    id: "audio",
-    icon: AudioLines,
-    lead: "on/off",
-    title: "Аудио аналитика",
-    subtitleLeft: "12",
-    subtitleRight: "не подключено",
-  },
-];
-
-const regulations = [
-  {
-    title: "Мусор/Беспорядок",
-    details: "На полу между местами 1 и 2 лежит белый мусор",
-    time: "14:00",
-  },
-  {
-    title: "Оборудование",
-    details: "На месте 2 отсутствует клавиатура",
-    time: "13:00 - 14:00",
-  },
-  {
-    title: "Мусор/Беспорядок",
-    details: "На полу между местами 1 и 2 лежит белый мусор",
-    time: "14:00",
-  },
-  {
-    title: "Оборудование",
-    details: "На месте 2 отсутствует клавиатура",
-    time: "13:00 - 14:00",
-  },
-];
+type IncidentType = "camera" | "reglament" | "audio";
+type NotificationApiStatus =
+  | "new"
+  | "cancelled"
+  | "failed"
+  | "success_after_failed"
+  | "success";
 
 type StockRow = {
   name: string;
   minStock: number;
   showcaseStock: number;
-  warehouseStock: number;
+  warehouseStock: number | null;
 };
-
-const stockRows: StockRow[] = [
-  {
-    name: "Напиток Добрый Апельсин газированный, 500мл",
-    minStock: 12,
-    showcaseStock: 5,
-    warehouseStock: 240,
-  },
-  {
-    name: "Напиток Добрый Лимон-лайм газированный, 500мл",
-    minStock: 12,
-    showcaseStock: 5,
-    warehouseStock: 180,
-  },
-  {
-    name: "Напиток Добрый Cola без сахара",
-    minStock: 12,
-    showcaseStock: 10,
-    warehouseStock: 240,
-  },
-  {
-    name: "Напиток Добрый Cola без сахара",
-    minStock: 12,
-    showcaseStock: 10,
-    warehouseStock: 210,
-  },
-];
 
 type IncidentCard = {
   id: string;
@@ -204,141 +134,167 @@ type NotificationRow = {
   mediaTone: NotificationMediaTone;
 };
 
-const incidentCards: IncidentCard[] = [
+const dashboardData = dashboardPayload.data;
+
+const resolveIncidentType = (type: string): IncidentType => {
+  if (type === "camera" || type === "reglament" || type === "audio") {
+    return type;
+  }
+
+  return "reglament";
+};
+
+const getIncidentTypeIcon = (type: IncidentType): LucideIcon => {
+  if (type === "camera") {
+    return Cctv;
+  }
+
+  if (type === "audio") {
+    return AudioLines;
+  }
+
+  return ClipboardCheck;
+};
+
+const getIncidentTypeLabel = (type: IncidentType) => {
+  if (type === "camera") {
+    return "Камера";
+  }
+
+  if (type === "audio") {
+    return "Аудио";
+  }
+
+  return "Регламент";
+};
+
+const resolveNotificationStatus = (
+  status: string,
+): { label: string; tone: NotificationStatusTone } => {
+  const resolvedStatus = status as NotificationApiStatus;
+
+  if (resolvedStatus === "new") {
+    return { label: "Новое", tone: "green" };
+  }
+
+  if (resolvedStatus === "cancelled") {
+    return { label: "Ложное", tone: "amber" };
+  }
+
+  if (resolvedStatus === "failed") {
+    return { label: "Просрочено", tone: "red" };
+  }
+
+  if (
+    resolvedStatus === "success_after_failed" ||
+    resolvedStatus === "success"
+  ) {
+    return { label: "Решено", tone: "gray" };
+  }
+
+  return { label: "Новое", tone: "green" };
+};
+
+const notificationsBadge = dashboardData.notifications.filter(
+  (item) => item.status === "new",
+).length;
+
+const pageItems: SidebarItem[] = [
+  { label: "Регламенты", icon: ClipboardCheck },
+  { label: "Аналитика", icon: ChartLine },
+  { label: "Аудио-аналитика", icon: ChartColumn },
+  { label: "Уведомления", icon: Bell, badge: notificationsBadge },
+  { label: "Сотрудники", icon: Users },
+  { label: "Витрина и склад", icon: ListTodo },
+];
+
+const summaryCards: SummaryCard[] = [
   {
-    id: "incident-1",
-    title: "Беспорядок, мусор",
-    source: "Камера",
-    sourceIcon: Cctv,
-    location: "#08, #09",
-    timeAgo: "7 минут назад",
-    description:
-      "STREAM - место 1 (свободное): на столе оставлены две обертки/упаковки (у клавиатуры и на переднем правом краю стола), убрать",
-    hasPreview: true,
+    id: "cameras",
+    icon: Camera,
+    lead: String(dashboardData.video.cameras_active),
+    badge: dashboardData.video.enabled ? "Подключено" : undefined,
+    title: "Камеры",
+    subtitleLeft: `${dashboardData.video.cameras_active}/${dashboardData.video.cameras_total}`,
+    subtitleRight: "включены в помещении",
   },
   {
-    id: "incident-2",
-    title: "Проверка туалета",
-    source: "Регламент",
-    sourceIcon: ClipboardCheck,
-    timeAgo: "7 минут назад",
-    description:
-      "STREAM - место 1 (свободное): на столе оставлены две обертки/упаковки (у клавиатуры и на переднем правом краю стола), убрать",
-    hasPreview: false,
-  },
-  {
-    id: "incident-3",
-    title: "Беспорядок, мусор",
-    source: "Камера",
-    sourceIcon: Cctv,
-    location: "Рабочее место 08",
-    timeAgo: "7 минут назад",
-    description:
-      "STREAM - место 1 (свободное): на столе оставлены две обертки/упаковки (у клавиатуры и на переднем правом краю стола), убрать",
-    hasPreview: true,
+    id: "audio",
+    icon: AudioLines,
+    lead: dashboardData.audio.enabled ? "on" : "off",
+    title: "Аудио аналитика",
+    subtitleLeft: String(dashboardData.audio.devices_active),
+    subtitleRight: dashboardData.audio.enabled ? "подключено" : "не подключено",
   },
 ];
 
-const overdueIncidentCards: OverdueIncidentCard[] = [
-  {
-    id: "overdue-1",
-    title: "Беспорядок, мусор",
-    timeLabel: "12:30",
-  },
-  {
-    id: "overdue-2",
-    title: "Оборудование",
-    timeLabel: "27 минут назад",
-  },
-  {
-    id: "overdue-3",
-    title: "Громкий звук",
-    timeLabel: "40 минут назад",
-  },
-  {
-    id: "overdue-4",
-    title: "Беспорядок, мусор",
-    timeLabel: "12:30",
-  },
-];
+const regulations = dashboardData.reglaments.map((item) => ({
+  title: item.title,
+  details: item.description,
+  time: item.time,
+}));
 
-const notificationRows: NotificationRow[] = [
-  {
-    id: "#5099",
-    status: "Новое",
-    statusTone: "green",
-    workplace: "№01",
-    incidentName: "Оборудование",
-    description:
-      "STREAM - белая отражающая панель поставлена перед монитором; переставить в исходное положение",
-    dateTime: "12.12.25 / 12:03",
-    assignee: "Андрей Брежневский",
-    typeLabel: "Регламент",
-    typeIcon: ClipboardCheck,
-    camera: "№01",
-    mediaTone: "gray",
+const stockRows: StockRow[] = dashboardData.stock.map((item) => ({
+  name: item.title,
+  minStock: item.min,
+  showcaseStock: item.in_stock,
+  warehouseStock: null,
+}));
+
+const incidentCards: IncidentCard[] = dashboardData.active_incidents.map(
+  (item) => {
+    const incidentType = resolveIncidentType(item.type);
+
+    return {
+      id: String(item.id),
+      title: item.title,
+      source: getIncidentTypeLabel(incidentType),
+      sourceIcon: getIncidentTypeIcon(incidentType),
+      location: item.places.length ? item.places.join(", ") : undefined,
+      timeAgo: `#${item.id}`,
+      description: item.description,
+      hasPreview: Boolean(item.picture),
+    };
   },
-  {
-    id: "#5008",
-    status: "Ложное",
-    statusTone: "amber",
-    workplace: "№02",
-    incidentName: "Громкий звук",
-    description:
-      "ARENA2 - на левом диване у зелёного стола посетитель лежит и громко орет",
-    dateTime: "10.12.25 / 11:33",
-    assignee: "Михаил Стругачев",
-    typeLabel: "Аудио",
-    typeIcon: AudioLines,
-    camera: "№02",
-    mediaTone: "none",
+);
+
+const overdueIncidentCards: OverdueIncidentCard[] =
+  dashboardData.failed_incidents.map((item) => ({
+    id: String(item.id),
+    title: item.title,
+    timeLabel: `#${item.id}`,
+  }));
+
+const notificationRows: NotificationRow[] = dashboardData.notifications.map(
+  (item) => {
+    const incidentType = resolveIncidentType(item.type);
+    const notificationStatus = resolveNotificationStatus(item.status);
+
+    return {
+      id: `#${item.id}`,
+      status: notificationStatus.label,
+      statusTone: notificationStatus.tone,
+      workplace: item.places[0] ?? "—",
+      incidentName: item.title,
+      description: item.description,
+      dateTime: "— / —",
+      assignee: item.staff,
+      typeLabel: getIncidentTypeLabel(incidentType),
+      typeIcon: getIncidentTypeIcon(incidentType),
+      camera: item.device_title ?? item.places[0] ?? "—",
+      mediaTone: item.picture
+        ? item.status === "failed" || item.status === "success_after_failed"
+          ? "blue"
+          : "gray"
+        : "none",
+    };
   },
-  {
-    id: "#5101",
-    status: "Просрочено",
-    statusTone: "red",
-    workplace: "№03",
-    incidentName: "Оборудование",
-    description:
-      "SQUAD1 - место 4 (правое): клавиатура лежит на спинке кресла, вернуть на стол",
-    dateTime: "02.12.25 / 09:49",
-    assignee: "Тарас Василенко",
-    typeLabel: "Регламент",
-    typeIcon: ClipboardCheck,
-    camera: "№03",
-    mediaTone: "blue",
-  },
-  {
-    id: "#4586",
-    status: "Решено",
-    statusTone: "red",
-    workplace: "№04",
-    incidentName: "Беспорядок, мусор",
-    description:
-      "STREAM - место 1 (свободное): на столе оставлены две обёртки/упаковки",
-    dateTime: "01.12.25 / 05:12",
-    assignee: "Марина Тарасова",
-    typeLabel: "Камера",
-    typeIcon: Cctv,
-    camera: "№04",
-    mediaTone: "blue",
-  },
-  {
-    id: "#4360",
-    status: "Решено",
-    statusTone: "gray",
-    workplace: "№05",
-    incidentName: "Беспорядок, мусор",
-    description:
-      "SQUAD1 - на столе №4 (правый крайний, свободный): оставлена бутылка",
-    dateTime: "30.11.25 / 00:45",
-    assignee: "Ольга Трешоткаина",
-    typeLabel: "Камера",
-    typeIcon: Cctv,
-    camera: "№05",
-    mediaTone: "gray",
-  },
-];
+);
+
+const activePoint = dashboardData.points.find((point) => point.is_active);
+const selectedPointTitle = activePoint?.title ?? dashboardData.points[0]?.title;
+const isSelectedPointOnline = activePoint?.online_status ?? false;
+const userFullName = `${dashboardData.user.first_name} ${dashboardData.user.last_name}`;
 
 const statusToneClass: Record<NotificationStatusTone, string> = {
   green: "bg-emerald-100 text-emerald-700",
@@ -512,17 +468,26 @@ export const DashboardPage = ({ onLogout }: DashboardPageProps) => {
             <div className="flex items-center gap-4">
               <SidebarTrigger />
               <span className="h-6 w-px bg-[#DEDEDF]" />
-              <span className="inline-flex items-center rounded-xl bg-[#F0F0F2] px-2 py-1 text-xs text-black">
-                Не в сети
+              <span
+                className={cn(
+                  "inline-flex items-center rounded-xl px-2 py-1 text-xs",
+                  isSelectedPointOnline
+                    ? "bg-emerald-100 text-emerald-700"
+                    : "bg-[#F0F0F2] text-black",
+                )}
+              >
+                {isSelectedPointOnline ? "В сети" : "Не в сети"}
               </span>
-              <Select defaultValue="mnevniki">
+              <Select defaultValue={selectedPointTitle}>
                 <SelectTrigger className="h-9 border-none bg-transparent px-0 text-sm font-medium text-black shadow-none focus-visible:ring-0">
                   <SelectValue placeholder="Клуб" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="mnevniki">Клуб Мневники</SelectItem>
-                  <SelectItem value="arbat">Клуб Арбат</SelectItem>
-                  <SelectItem value="tverskaya">Клуб Тверская</SelectItem>
+                  {dashboardData.points.map((point) => (
+                    <SelectItem key={point.title} value={point.title}>
+                      Клуб {point.title}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>
@@ -561,14 +526,19 @@ export const DashboardPage = ({ onLogout }: DashboardPageProps) => {
                   aria-label="Профиль пользователя"
                 >
                   <Avatar className="rounded-md border bg-[#EAEAEC]">
-                    <AvatarImage src="/avatar.png" alt="Михаил Иванов" />
+                    <AvatarImage
+                      src={dashboardData.user.avatar}
+                      alt={userFullName}
+                    />
                     <AvatarFallback className="rounded-md bg-[#EAEAEC] text-black">
                       <UserRound />
                     </AvatarFallback>
                   </Avatar>
                   <div>
-                    <p className="font-medium text-black">Михаил Иванов</p>
-                    <p className="text-[#787878]">Админ</p>
+                    <p className="font-medium text-black">{userFullName}</p>
+                    <p className="text-[#787878]">
+                      {dashboardData.user.role_title}
+                    </p>
                   </div>
                 </button>
 
@@ -1195,7 +1165,7 @@ export const DashboardPage = ({ onLogout }: DashboardPageProps) => {
                   <div className="flex items-center justify-between text-base">
                     <span className="text-[#787878]">Остаток на складе</span>
                     <span className="font-semibold text-foreground">
-                      {selectedStockRow?.warehouseStock ?? 0}
+                      {selectedStockRow?.warehouseStock ?? "—"}
                     </span>
                   </div>
 
