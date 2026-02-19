@@ -48,7 +48,7 @@ export const LoginPage = ({
         src="/detectra.svg"
         alt=""
         aria-hidden
-        className="pointer-events-none absolute bottom-[-72px] left-1/2 w-[min(1700px,115vw)] -translate-x-1/2 select-none opacity-[0.05]"
+        className="pointer-events-none absolute bottom-[-22px] left-1/2 w-[min(1700px,115vw)] -translate-x-1/2 select-none opacity-[0.05]"
       />
 
       <div className="relative z-10 mx-auto flex min-h-[calc(100vh-4rem)] w-full max-w-[520px] items-center">
