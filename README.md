@@ -1,5 +1,16 @@
 # React + TypeScript + Vite
 
+## Production Deploy
+
+Production is served from:
+- `https://detectra-lk.onedaycrm.ru`
+- `https://www.detectra-lk.onedaycrm.ru`
+
+Autodeploy is configured in `.github/workflows/deploy.yml` and runs on every push to `main`.
+
+Required GitHub secret:
+- `DEPLOY_SSH_PRIVATE_KEY` - private SSH key for server access (`root@85.198.65.128`).
+
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
 Currently, two official plugins are available:
