@@ -28,18 +28,25 @@ import {
 import { applyTheme, resolveInitialTheme } from "@/shared/theme/theme";
 import { cn } from "@/lib/utils";
 import {
+  ArrowUpDown,
   AudioLines,
   Bell,
   Camera,
+  Cctv,
   ChartColumn,
   ChartLine,
+  ChevronLeft,
   ChevronRight,
   ClipboardCheck,
+  Flag,
   ListTodo,
   Moon,
+  Monitor,
+  Pencil,
   Sandwich,
   Settings,
   Sun,
+  Trash2,
   UserRound,
   Users,
 } from "lucide-react";
@@ -140,6 +147,189 @@ const stockRows = [
     amount: "10 шт.",
   },
 ];
+
+type IncidentCard = {
+  id: string;
+  title: string;
+  source: string;
+  sourceIcon: LucideIcon;
+  location?: string;
+  timeAgo: string;
+  description: string;
+  hasPreview: boolean;
+};
+
+type OverdueIncidentCard = {
+  id: string;
+  title: string;
+  timeLabel: string;
+};
+
+type NotificationStatusTone = "green" | "amber" | "red" | "gray";
+type NotificationMediaTone = "gray" | "blue" | "none";
+
+type NotificationRow = {
+  id: string;
+  status: string;
+  statusTone: NotificationStatusTone;
+  workplace: string;
+  incidentName: string;
+  description: string;
+  dateTime: string;
+  assignee: string;
+  typeLabel: string;
+  typeIcon: LucideIcon;
+  camera: string;
+  mediaTone: NotificationMediaTone;
+};
+
+const incidentCards: IncidentCard[] = [
+  {
+    id: "incident-1",
+    title: "Беспорядок, мусор",
+    source: "Камера",
+    sourceIcon: Cctv,
+    location: "#08, #09",
+    timeAgo: "7 минут назад",
+    description:
+      "STREAM - место 1 (свободное): на столе оставлены две обертки/упаковки (у клавиатуры и на переднем правом краю стола), убрать",
+    hasPreview: true,
+  },
+  {
+    id: "incident-2",
+    title: "Проверка туалета",
+    source: "Регламент",
+    sourceIcon: ClipboardCheck,
+    timeAgo: "7 минут назад",
+    description:
+      "STREAM - место 1 (свободное): на столе оставлены две обертки/упаковки (у клавиатуры и на переднем правом краю стола), убрать",
+    hasPreview: false,
+  },
+  {
+    id: "incident-3",
+    title: "Беспорядок, мусор",
+    source: "Камера",
+    sourceIcon: Cctv,
+    location: "Рабочее место 08",
+    timeAgo: "7 минут назад",
+    description:
+      "STREAM - место 1 (свободное): на столе оставлены две обертки/упаковки (у клавиатуры и на переднем правом краю стола), убрать",
+    hasPreview: true,
+  },
+];
+
+const overdueIncidentCards: OverdueIncidentCard[] = [
+  {
+    id: "overdue-1",
+    title: "Беспорядок, мусор",
+    timeLabel: "12:30",
+  },
+  {
+    id: "overdue-2",
+    title: "Оборудование",
+    timeLabel: "27 минут назад",
+  },
+  {
+    id: "overdue-3",
+    title: "Громкий звук",
+    timeLabel: "40 минут назад",
+  },
+  {
+    id: "overdue-4",
+    title: "Беспорядок, мусор",
+    timeLabel: "12:30",
+  },
+];
+
+const notificationRows: NotificationRow[] = [
+  {
+    id: "#5099",
+    status: "Новое",
+    statusTone: "green",
+    workplace: "№01",
+    incidentName: "Оборудование",
+    description:
+      "STREAM - белая отражающая панель поставлена перед монитором; переставить в исходное положение",
+    dateTime: "12.12.25 / 12:03",
+    assignee: "Андрей Брежневский",
+    typeLabel: "Регламент",
+    typeIcon: ClipboardCheck,
+    camera: "№01",
+    mediaTone: "gray",
+  },
+  {
+    id: "#5008",
+    status: "Ложное",
+    statusTone: "amber",
+    workplace: "№02",
+    incidentName: "Громкий звук",
+    description:
+      "ARENA2 - на левом диване у зелёного стола посетитель лежит и громко орет",
+    dateTime: "10.12.25 / 11:33",
+    assignee: "Михаил Стругачев",
+    typeLabel: "Аудио",
+    typeIcon: AudioLines,
+    camera: "№02",
+    mediaTone: "none",
+  },
+  {
+    id: "#5101",
+    status: "Просрочено",
+    statusTone: "red",
+    workplace: "№03",
+    incidentName: "Оборудование",
+    description:
+      "SQUAD1 - место 4 (правое): клавиатура лежит на спинке кресла, вернуть на стол",
+    dateTime: "02.12.25 / 09:49",
+    assignee: "Тарас Василенко",
+    typeLabel: "Регламент",
+    typeIcon: ClipboardCheck,
+    camera: "№03",
+    mediaTone: "blue",
+  },
+  {
+    id: "#4586",
+    status: "Решено",
+    statusTone: "red",
+    workplace: "№04",
+    incidentName: "Беспорядок, мусор",
+    description:
+      "STREAM - место 1 (свободное): на столе оставлены две обёртки/упаковки",
+    dateTime: "01.12.25 / 05:12",
+    assignee: "Марина Тарасова",
+    typeLabel: "Камера",
+    typeIcon: Cctv,
+    camera: "№04",
+    mediaTone: "blue",
+  },
+  {
+    id: "#4360",
+    status: "Решено",
+    statusTone: "gray",
+    workplace: "№05",
+    incidentName: "Беспорядок, мусор",
+    description:
+      "SQUAD1 - на столе №4 (правый крайний, свободный): оставлена бутылка",
+    dateTime: "30.11.25 / 00:45",
+    assignee: "Ольга Трешоткаина",
+    typeLabel: "Камера",
+    typeIcon: Cctv,
+    camera: "№05",
+    mediaTone: "gray",
+  },
+];
+
+const statusToneClass: Record<NotificationStatusTone, string> = {
+  green: "bg-emerald-100 text-emerald-700",
+  amber: "bg-amber-100 text-amber-700",
+  red: "bg-[#FEE2E2] text-[#EF4444]",
+  gray: "bg-muted text-muted-foreground",
+};
+
+const mediaToneClass: Record<Exclude<NotificationMediaTone, "none">, string> = {
+  gray: "bg-gradient-to-br from-[#5A5A5A] to-[#121212]",
+  blue: "bg-gradient-to-br from-[#6B7BFF] via-[#4E42CA] to-[#2C2C9E]",
+};
 
 const DashboardSidebar = () => {
   const { open } = useSidebar();
@@ -424,7 +614,7 @@ export const DashboardPage = ({ onLogout }: DashboardPageProps) => {
                       </div>
                       <p
                         className={cn(
-                          "pt-0.5 whitespace-nowrap text-lg font-medium",
+                          "pt-0.5 whitespace-nowrap text-sm font-bold",
                           item.amount.startsWith("10")
                             ? "text-[#D2933C]"
                             : "text-[#E15241]",
@@ -441,6 +631,319 @@ export const DashboardPage = ({ onLogout }: DashboardPageProps) => {
                       </Button>
                     </div>
                   ))}
+                </CardContent>
+              </Card>
+            </section>
+
+            <section>
+              <Card className="rounded-2xl shadow-none">
+                <CardHeader>
+                  <CardTitle className="text-xl font-semibold leading-none tracking-tight">
+                    Активные инциденты
+                  </CardTitle>
+                </CardHeader>
+
+                <CardContent>
+                  <div className="grid gap-4 xl:grid-cols-3">
+                    {incidentCards.map((item) => {
+                      const SourceIcon = item.sourceIcon;
+
+                      return (
+                        <Card key={item.id} className="rounded-2xl shadow-none">
+                          <CardContent className="space-y-0 p-0">
+                            <div className="flex items-center justify-between gap-3 mb-2 p-6 py-0">
+                              <span className="inline-flex items-center rounded-full bg-emerald-100 px-2.5 py-1 text-xs font-medium text-emerald-700">
+                                Новое
+                              </span>
+                              <span className="text-sm text-muted-foreground">
+                                {item.timeAgo}
+                              </span>
+                            </div>
+
+                            <p className="text-lg font-semibold leading-none p-6 py-1">
+                              {item.title}
+                            </p>
+
+                            <div className="flex items-center justify-between gap-3 text-sm text-muted-foreground p-6 pt-2 pb-4">
+                              <span className="inline-flex items-center gap-2">
+                                <SourceIcon className="size-4 " />
+                                {item.source}
+                              </span>
+                              {item.location ? (
+                                <span className="inline-flex items-center gap-2">
+                                  <Monitor className="size-4" />
+                                  {item.location}
+                                </span>
+                              ) : null}
+                            </div>
+
+                            {item.hasPreview ? (
+                              <div className="flex items-center justify-center h-[226px]   bg-[#F3F3F3] pt-6"></div>
+                            ) : null}
+
+                            <p className="text-base text-muted-foreground p-6 ">
+                              {item.description}
+                            </p>
+
+                            <div className="grid grid-cols-2 gap-3 p-6 py-0">
+                              <Button className="w-full">Завершить</Button>
+                              <Button variant="secondary" className="w-full">
+                                Ложное
+                              </Button>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      );
+                    })}
+                  </div>
+                </CardContent>
+              </Card>
+            </section>
+
+            <section>
+              <Card className="rounded-2xl shadow-none">
+                <CardHeader>
+                  <CardTitle className="text-xl font-semibold leading-none tracking-tight">
+                    Просроченные инциденты
+                  </CardTitle>
+                </CardHeader>
+
+                <CardContent>
+                  <div className="grid gap-4 xl:grid-cols-4">
+                    {overdueIncidentCards.map((item) => (
+                      <Card key={item.id} className="rounded-2xl shadow-none">
+                        <CardContent className="space-y-4 px-4">
+                          <div className="flex items-center justify-between gap-3">
+                            <span className="font-base text-lg leading-none tracking-tight text-[#787878]">
+                              {item.timeLabel}
+                            </span>
+                            <span className="inline-flex items-center rounded-full bg-[#FEE2E2] px-2.5 py-1 text-xs font-medium text-[#EF4444]">
+                              Просрочено
+                            </span>
+                          </div>
+
+                          <p className="text-lg font-semibold leading-none">
+                            {item.title}
+                          </p>
+
+                          <div className="grid grid-cols-2 gap-3">
+                            <Button className="w-full">Завершить</Button>
+                            <Button variant="secondary" className="w-full">
+                              Ложное
+                            </Button>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            </section>
+
+            <section>
+              <Card className="rounded-2xl shadow-none">
+                <CardHeader className="block">
+                  <CardTitle className="text-xl  font-semibold leading-none tracking-tight">
+                    Уведомления
+                  </CardTitle>
+                </CardHeader>
+
+                <CardContent className="space-y-4 px-0 pb-4">
+                  <div className="overflow-x-auto border-y">
+                    <table className="w-full min-w-[1500px]">
+                      <thead>
+                        <tr className="border-b text-left text-sm text-muted-foreground">
+                          <th className="px-5 py-4 font-medium">Номер</th>
+                          <th className="px-3 py-4 font-medium">
+                            <span className="inline-flex items-center gap-2">
+                              Статус
+                              <ArrowUpDown className="size-4" />
+                            </span>
+                          </th>
+                          <th className="min-w-[150px] px-3 py-4 font-medium whitespace-nowrap">
+                            <span className="inline-flex items-center gap-2 whitespace-nowrap">
+                              Рабочее место
+                              <ArrowUpDown className="size-4" />
+                            </span>
+                          </th>
+                          <th className="min-w-[230px] px-3 py-4 font-medium whitespace-nowrap">
+                            <span className="inline-flex items-center gap-2 whitespace-nowrap">
+                              Наименование инцидента
+                              <ArrowUpDown className="size-4" />
+                            </span>
+                          </th>
+                          <th className="min-w-[260px] px-3 py-4 font-medium">
+                            <span className="inline-flex items-center gap-2 whitespace-nowrap">
+                              Описание инцидента
+                              <ArrowUpDown className="size-4" />
+                            </span>
+                          </th>
+                          <th className="min-w-[170px] px-3 py-4 font-medium whitespace-nowrap">
+                            <span className="inline-flex items-center gap-2 whitespace-nowrap">
+                              Дата / время
+                              <ArrowUpDown className="size-4" />
+                            </span>
+                          </th>
+                          <th className="px-3 py-4 font-medium">
+                            <span className="inline-flex items-center gap-2">
+                              Ответственный
+                              <ArrowUpDown className="size-4" />
+                            </span>
+                          </th>
+                          <th className="px-3 py-4 font-medium">
+                            <span className="inline-flex items-center gap-2">
+                              Тип
+                              <ArrowUpDown className="size-4" />
+                            </span>
+                          </th>
+                          <th className="px-3 py-4 font-medium">
+                            <span className="inline-flex items-center gap-2">
+                              Камера
+                              <ArrowUpDown className="size-4" />
+                            </span>
+                          </th>
+                          <th className="px-3 py-4 font-medium">
+                            <span className="inline-flex items-center gap-2">
+                              Медиа
+                              <ArrowUpDown className="size-4" />
+                            </span>
+                          </th>
+                          <th className="px-3 py-4 font-medium">Действие</th>
+                        </tr>
+                      </thead>
+
+                      <tbody>
+                        {notificationRows.map((row) => {
+                          const TypeIcon = row.typeIcon;
+                          const [datePart, timePart] = row.dateTime
+                            .split("/")
+                            .map((part) => part.trim());
+
+                          return (
+                            <tr key={row.id} className="border-b text-sm">
+                              <td className="px-5 py-3 text-sm text-muted-foreground">
+                                {row.id}
+                              </td>
+                              <td className="px-3 py-3">
+                                <span
+                                  className={cn(
+                                    "inline-flex items-center gap-1 rounded-sm px-2.5 py-1 text-xs font-medium",
+                                    statusToneClass[row.statusTone],
+                                  )}
+                                >
+                                  {row.status === "Решено" ? (
+                                    <Flag className="size-3.5" />
+                                  ) : null}
+                                  {row.status}
+                                </span>
+                              </td>
+                              <td className="min-w-[150px] px-3 py-3 text-sm text-muted-foreground whitespace-nowrap">
+                                {row.workplace}
+                              </td>
+                              <td className="min-w-[230px] px-3 py-3 text-sm font-semibold whitespace-nowrap">
+                                {row.incidentName}
+                              </td>
+                              <td className="max-w-[280px] px-3 py-3 text-sm text-muted-foreground">
+                                <p
+                                  className="overflow-hidden leading-5"
+                                  style={{
+                                    display: "-webkit-box",
+                                    WebkitLineClamp: 2,
+                                    WebkitBoxOrient: "vertical",
+                                  }}
+                                >
+                                  {row.description}
+                                </p>
+                              </td>
+                              <td className="min-w-[170px] px-3 py-3 text-sm whitespace-nowrap">
+                                <span className="text-foreground">
+                                  {datePart ?? row.dateTime}
+                                </span>
+                                {timePart ? (
+                                  <span className="text-muted-foreground">
+                                    {" "}
+                                    / {timePart}
+                                  </span>
+                                ) : null}
+                              </td>
+                              <td className="px-3 py-3 text-sm font-semibold">
+                                {row.assignee}
+                              </td>
+                              <td className="px-3 py-3">
+                                <span className="inline-flex items-center gap-2 text-sm text-muted-foreground">
+                                  <span className="inline-flex rounded-full bg-muted p-2">
+                                    <TypeIcon className="size-4" />
+                                  </span>
+                                  {row.typeLabel}
+                                </span>
+                              </td>
+                              <td className="px-3 py-3 text-sm text-muted-foreground">
+                                {row.camera}
+                              </td>
+                              <td className="px-3 py-3">
+                                {row.mediaTone === "none" ? (
+                                  <span className="text-muted-foreground">
+                                    -
+                                  </span>
+                                ) : (
+                                  <span
+                                    aria-hidden
+                                    className={cn(
+                                      "block h-8 w-14 rounded-md",
+                                      mediaToneClass[row.mediaTone],
+                                    )}
+                                  />
+                                )}
+                              </td>
+                              <td className="px-3 py-3">
+                                <div className="flex items-center gap-1">
+                                  <Button variant="ghost" size="icon">
+                                    <Pencil className="size-4" />
+                                  </Button>
+                                  <Button variant="ghost" size="icon">
+                                    <Trash2 className="size-4" />
+                                  </Button>
+                                </div>
+                              </td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </table>
+                  </div>
+
+                  <div className="flex items-center justify-between px-5">
+                    <p className="text-sm text-muted-foreground">
+                      Показывать 5 из 205
+                    </p>
+
+                    <div className="flex items-center gap-2">
+                      <Button variant="outline" size="sm" className="gap-2">
+                        <ChevronLeft className="size-4" />
+                        Предыдущая
+                      </Button>
+                      <Button variant="outline" size="icon" className="h-9 w-9">
+                        1
+                      </Button>
+                      <Button
+                        variant="secondary"
+                        size="icon"
+                        className="h-9 w-9"
+                      >
+                        2
+                      </Button>
+                      <Button variant="outline" size="icon" className="h-9 w-9">
+                        3
+                      </Button>
+                      <Button variant="outline" size="icon" className="h-9 w-9">
+                        4
+                      </Button>
+                      <Button variant="outline" size="sm" className="gap-2">
+                        Следующая
+                        <ChevronRight className="size-4" />
+                      </Button>
+                    </div>
+                  </div>
                 </CardContent>
               </Card>
             </section>
