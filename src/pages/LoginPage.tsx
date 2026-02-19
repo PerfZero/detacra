@@ -43,12 +43,12 @@ export const LoginPage = ({
   };
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-white px-4 py-8">
+    <div className="relative min-h-screen overflow-hidden bg-background px-4 py-8">
       <img
         src="/detectra.svg"
         alt=""
         aria-hidden
-        className="pointer-events-none absolute bottom-[-72px] left-1/2 w-[min(1700px,115vw)] -translate-x-1/2 select-none opacity-80"
+        className="pointer-events-none absolute bottom-[-72px] left-1/2 w-[min(1700px,115vw)] -translate-x-1/2 select-none opacity-[0.05]"
       />
 
       <div className="relative z-10 mx-auto flex min-h-[calc(100vh-4rem)] w-full max-w-[520px] items-center">
