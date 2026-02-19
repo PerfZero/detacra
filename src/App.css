@@ -10,16 +10,8 @@
 .login-card {
     width: 100%;
     max-width: 520px;
+    border-radius: 16px;
     box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
-}
-
-.login-title.ant-typography {
-    margin-bottom: 0;
-}
-
-.login-subtitle.ant-typography {
-    margin-top: 8px;
-    margin-bottom: 24px;
 }
 
 .login-form .ant-form-item {

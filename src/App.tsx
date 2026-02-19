@@ -15,10 +15,13 @@ function App() {
   return (
     <div className="page">
       <Card className="login-card">
-        <Typography.Title className="login-title" level={2}>
+        <Typography.Title
+          className="!m-0 !text-2xl !leading-8 !font-semibold !tracking-[0]"
+          level={2}
+        >
           Вход
         </Typography.Title>
-        <Typography.Paragraph className="login-subtitle">
+        <Typography.Paragraph className="!mt-2 !mb-6 !text-base !leading-6 !font-normal !tracking-[0]">
           Добро пожаловать в Detectra
         </Typography.Paragraph>
 
