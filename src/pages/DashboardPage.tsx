@@ -2,7 +2,16 @@ import { useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import {
   Select,
   SelectContent,
@@ -10,6 +19,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Slider } from "@/components/ui/slider";
 import {
   Sidebar,
   SidebarContent,
@@ -125,26 +135,37 @@ const regulations = [
   },
 ];
 
-const stockRows = [
+type StockRow = {
+  name: string;
+  minStock: number;
+  showcaseStock: number;
+  warehouseStock: number;
+};
+
+const stockRows: StockRow[] = [
   {
-    name: "Напиток Добрый газированный, 500мл",
-    minStock: "Минимальный остаток: 12 штук",
-    amount: "5 шт.",
+    name: "Напиток Добрый Апельсин газированный, 500мл",
+    minStock: 12,
+    showcaseStock: 5,
+    warehouseStock: 240,
   },
   {
-    name: "Напиток Добрый газированный, 500мл",
-    minStock: "Минимальный остаток: 12 штук",
-    amount: "5 шт.",
+    name: "Напиток Добрый Лимон-лайм газированный, 500мл",
+    minStock: 12,
+    showcaseStock: 5,
+    warehouseStock: 180,
   },
   {
     name: "Напиток Добрый Cola без сахара",
-    minStock: "Минимальный остаток: 12 штук",
-    amount: "10 шт.",
+    minStock: 12,
+    showcaseStock: 10,
+    warehouseStock: 240,
   },
   {
     name: "Напиток Добрый Cola без сахара",
-    minStock: "Минимальный остаток: 12 штук",
-    amount: "10 шт.",
+    minStock: 12,
+    showcaseStock: 10,
+    warehouseStock: 210,
   },
 ];
 
@@ -331,6 +352,13 @@ const mediaToneClass: Record<Exclude<NotificationMediaTone, "none">, string> = {
   blue: "bg-gradient-to-br from-[#6B7BFF] via-[#4E42CA] to-[#2C2C9E]",
 };
 
+const falseIncidentReasonOptions = [
+  { id: "reason-1", label: "Текст" },
+  { id: "reason-2", label: "Текст" },
+  { id: "reason-3", label: "Текст" },
+  { id: "reason-other", label: "Другое" },
+];
+
 const DashboardSidebar = () => {
   const { open } = useSidebar();
 
@@ -416,11 +444,62 @@ const DashboardSidebar = () => {
 
 export const DashboardPage = ({ onLogout }: DashboardPageProps) => {
   const [theme, setTheme] = useState<Theme>(() => resolveInitialTheme());
+  const [selectedStockRow, setSelectedStockRow] = useState<StockRow | null>(
+    null,
+  );
+  const [replenishValue, setReplenishValue] = useState(12);
+  const [falseIncidentTarget, setFalseIncidentTarget] = useState<string | null>(
+    null,
+  );
+  const [resolvedIncidentTarget, setResolvedIncidentTarget] = useState<
+    string | null
+  >(null);
+  const [falseIncidentReasonId, setFalseIncidentReasonId] = useState(
+    falseIncidentReasonOptions[0].id,
+  );
 
   const handleThemeToggle = () => {
     const nextTheme: Theme = theme === "dark" ? "light" : "dark";
     setTheme(nextTheme);
     applyTheme(nextTheme);
+  };
+
+  const handleOpenReplenishDialog = (row: StockRow) => {
+    setSelectedStockRow(row);
+    setReplenishValue(Math.min(20, Math.max(1, row.minStock)));
+  };
+
+  const handleCloseReplenishDialog = () => {
+    setSelectedStockRow(null);
+  };
+
+  const handleReplenishValueChange = (value: number[]) => {
+    const nextValue = value[0];
+
+    if (typeof nextValue === "number") {
+      setReplenishValue(nextValue);
+    }
+  };
+
+  const handleOpenFalseIncidentDialog = (title: string) => {
+    setFalseIncidentTarget(title);
+    setFalseIncidentReasonId(falseIncidentReasonOptions[0].id);
+  };
+
+  const handleCloseFalseIncidentDialog = () => {
+    setFalseIncidentTarget(null);
+  };
+
+  const handleSubmitFalseIncident = () => {
+    setFalseIncidentTarget(null);
+  };
+
+  const handleOpenResolvedIncidentDialog = (title: string) => {
+    setResolvedIncidentTarget(title);
+  };
+
+  const handleCloseResolvedIncidentDialog = () => {
+    setResolvedIncidentTarget(null);
   };
 
   return (
@@ -609,23 +688,24 @@ export const DashboardPage = ({ onLogout }: DashboardPageProps) => {
                           {item.name}
                         </p>
                         <p className="mt-1 text-xs text-muted-foreground">
-                          {item.minStock}
+                          Минимальный остаток: {item.minStock} штук
                         </p>
                       </div>
                       <p
                         className={cn(
                           "pt-0.5 whitespace-nowrap text-sm font-bold",
-                          item.amount.startsWith("10")
+                          item.showcaseStock >= 10
                             ? "text-[#D2933C]"
                             : "text-[#E15241]",
                         )}
                       >
-                        {item.amount}
+                        {item.showcaseStock} шт.
                       </p>
                       <Button
                         variant="secondary"
                         size="sm"
                         className="rounded-xl"
+                        onClick={() => handleOpenReplenishDialog(item)}
                       >
                         Пополнить
                       </Button>
@@ -686,8 +766,21 @@ export const DashboardPage = ({ onLogout }: DashboardPageProps) => {
                             </p>
 
                             <div className="grid grid-cols-2 gap-3 p-6 py-0">
-                              <Button className="w-full">Завершить</Button>
-                              <Button variant="secondary" className="w-full">
+                              <Button
+                                className="w-full"
+                                onClick={() =>
+                                  handleOpenResolvedIncidentDialog(item.title)
+                                }
+                              >
+                                Завершить
+                              </Button>
+                              <Button
+                                variant="secondary"
+                                className="w-full"
+                                onClick={() =>
+                                  handleOpenFalseIncidentDialog(item.title)
+                                }
+                              >
                                 Ложное
                               </Button>
                             </div>
@@ -727,8 +820,21 @@ export const DashboardPage = ({ onLogout }: DashboardPageProps) => {
                           </p>
 
                           <div className="grid grid-cols-2 gap-3">
-                            <Button className="w-full">Завершить</Button>
-                            <Button variant="secondary" className="w-full">
+                            <Button
+                              className="w-full"
+                              onClick={() =>
+                                handleOpenResolvedIncidentDialog(item.title)
+                              }
+                            >
+                              Завершить
+                            </Button>
+                            <Button
+                              variant="secondary"
+                              className="w-full"
+                              onClick={() =>
+                                handleOpenFalseIncidentDialog(item.title)
+                              }
+                            >
                               Ложное
                             </Button>
                           </div>
@@ -947,6 +1053,175 @@ export const DashboardPage = ({ onLogout }: DashboardPageProps) => {
                 </CardContent>
               </Card>
             </section>
+
+            <Dialog
+              open={Boolean(falseIncidentTarget)}
+              onOpenChange={(isOpen) => {
+                if (!isOpen) {
+                  handleCloseFalseIncidentDialog();
+                }
+              }}
+            >
+              <DialogContent
+                showCloseButton={false}
+                className="max-w-[440px] rounded-2xl border-none p-6"
+              >
+                <DialogHeader>
+                  <DialogTitle className="text-2xl font-semibold leading-none">
+                    Инцидент ложный?
+                  </DialogTitle>
+                  <DialogDescription className="text-base text-muted-foreground">
+                    Укажите причину, по которой инцидент считается ложным.
+                  </DialogDescription>
+                </DialogHeader>
+
+                <RadioGroup
+                  value={falseIncidentReasonId}
+                  onValueChange={setFalseIncidentReasonId}
+                  className="space-y-1"
+                >
+                  {falseIncidentReasonOptions.map((reason) => (
+                    <Label
+                      key={reason.id}
+                      htmlFor={reason.id}
+                      className={cn(
+                        "w-full cursor-pointer rounded-md border px-3 py-2 text-sm font-normal transition-colors",
+                        falseIncidentReasonId === reason.id
+                          ? "border-[#171717] bg-[#17171710] text-foreground"
+                          : "border-input bg-background text-muted-foreground hover:bg-muted",
+                      )}
+                    >
+                      <RadioGroupItem id={reason.id} value={reason.id} />
+                      {reason.label}
+                    </Label>
+                  ))}
+                </RadioGroup>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <Button
+                    variant="secondary"
+                    className="w-full"
+                    onClick={handleCloseFalseIncidentDialog}
+                  >
+                    Отменить
+                  </Button>
+                  <Button
+                    className="w-full"
+                    onClick={handleSubmitFalseIncident}
+                  >
+                    Отправить
+                  </Button>
+                </div>
+              </DialogContent>
+            </Dialog>
+
+            <Dialog
+              open={Boolean(resolvedIncidentTarget)}
+              onOpenChange={(isOpen) => {
+                if (!isOpen) {
+                  handleCloseResolvedIncidentDialog();
+                }
+              }}
+            >
+              <DialogContent
+                showCloseButton={false}
+                className="max-w-[520px] rounded-2xl border-none p-6"
+              >
+                <DialogHeader>
+                  <DialogTitle className="text-2xl font-semibold leading-none">
+                    Инцидент решен?
+                  </DialogTitle>
+                  <DialogDescription className="text-base text-muted-foreground">
+                    Нажимая «Решён», вы подтверждаете, что инцидент устранён и
+                    дальнейших действий не требуется.
+                  </DialogDescription>
+                </DialogHeader>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <Button
+                    variant="secondary"
+                    className="w-full"
+                    onClick={handleCloseResolvedIncidentDialog}
+                  >
+                    Отменить
+                  </Button>
+                  <Button
+                    className="w-full"
+                    onClick={handleCloseResolvedIncidentDialog}
+                  >
+                    Решен
+                  </Button>
+                </div>
+              </DialogContent>
+            </Dialog>
+
+            <Dialog
+              open={Boolean(selectedStockRow)}
+              onOpenChange={(isOpen) => {
+                if (!isOpen) {
+                  handleCloseReplenishDialog();
+                }
+              }}
+            >
+              <DialogContent className="w-[374px] max-w-[calc(100%-2rem)] rounded-2xl border-none p-6">
+                <DialogHeader className="pr-10">
+                  <DialogTitle className="text-2xl font-semibold leading-none">
+                    Пополнить
+                  </DialogTitle>
+                  <DialogDescription className="pt-2 text-lg leading-7 text-[#787878]">
+                    {selectedStockRow?.name}
+                  </DialogDescription>
+                </DialogHeader>
+
+                <div className="pt-2 pb-4 text-center text-6xl leading-none font-semibold text-foreground">
+                  {replenishValue}
+                </div>
+
+                <Slider
+                  min={1}
+                  max={20}
+                  step={1}
+                  value={[replenishValue]}
+                  onValueChange={handleReplenishValueChange}
+                  className="w-full [&_[data-slot=slider-thumb]]:border-[#171717] [&_[data-slot=slider-thumb]]:bg-background [&_[data-slot=slider-thumb]]:size-6 [&_[data-slot=slider-track]]:h-2.5 [&_[data-slot=slider-track]]:bg-[#ECECEC] [&_[data-slot=slider-range]]:bg-[#171717]"
+                />
+
+                <div className="flex items-center justify-between text-base text-[#787878]">
+                  <span>min: 1</span>
+                  <span>max: 20</span>
+                </div>
+
+                <div className="space-y-4 pt-4">
+                  <div className="flex items-center justify-between text-base">
+                    <span className="text-[#787878]">Остаток на складе</span>
+                    <span className="font-semibold text-foreground">
+                      {selectedStockRow?.warehouseStock ?? 0}
+                    </span>
+                  </div>
+
+                  <div className="flex items-center justify-between text-base">
+                    <span className="text-[#787878]">Витрина</span>
+                    <span className="font-semibold text-foreground">
+                      {selectedStockRow?.showcaseStock ?? 0}
+                    </span>
+                  </div>
+
+                  <div className="flex items-center justify-between text-base">
+                    <span className="text-[#787878]">Минимальный остаток</span>
+                    <span className="text-[#787878]">
+                      {selectedStockRow?.minStock ?? 0}
+                    </span>
+                  </div>
+                </div>
+
+                <Button
+                  className="mt-3 h-12 w-full rounded-xl text-lg"
+                  onClick={handleCloseReplenishDialog}
+                >
+                  Пополнить
+                </Button>
+              </DialogContent>
+            </Dialog>
           </main>
         </SidebarInset>
       </SidebarProvider>
