@@ -1,0 +1,96 @@
+.page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    background: #ffffff;
+}
+
+.login-card {
+    width: 100%;
+    max-width: 520px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+}
+
+.login-title.ant-typography {
+    margin-bottom: 0;
+}
+
+.login-subtitle.ant-typography {
+    margin-top: 8px;
+    margin-bottom: 24px;
+}
+
+.login-form .ant-form-item {
+    margin-bottom: 16px;
+}
+
+.form-options {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+}
+
+.forgot-link {
+    color: inherit;
+    text-decoration: none;
+}
+
+.forgot-link:hover {
+    text-decoration: underline;
+}
+
+.submit-item {
+    margin-bottom: 12px;
+}
+
+.signup-row {
+    margin: 8px 0 18px;
+    text-align: center;
+    color: rgba(0, 0, 0, 0.45);
+}
+
+.signup-link {
+    color: #b946ff;
+    text-decoration: none;
+}
+
+.signup-link:hover {
+    text-decoration: underline;
+}
+
+.or-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.or-row span {
+    flex: 1;
+    height: 1px;
+    background: #e8e8e8;
+}
+
+.or-row p {
+    margin: 0;
+}
+
+.langame-button.ant-btn {
+    background: #f0f0f0;
+    border: none;
+}
+
+.langame-button.ant-btn:hover,
+.langame-button.ant-btn:focus {
+    background: #e6e6e6;
+    border: none;
+}
+
+@media (max-width: 640px) {
+    .page {
+        padding: 16px;
+    }
+}
