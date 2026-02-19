@@ -285,22 +285,36 @@ export const DashboardPage = ({ onLogout }: DashboardPageProps) => {
                 <span className="absolute top-0 right-0 h-2.5 w-2.5 rounded-full bg-[#DC3D32]" />
               </div>
 
-              <div className="flex ml-6 items-center gap-3">
-                <Avatar className="rounded-md border bg-[#EAEAEC]">
-                  <AvatarImage src="/avatar.png" alt="Михаил Иванов" />
-                  <AvatarFallback className="rounded-md bg-[#EAEAEC] text-black">
-                    <UserRound />
-                  </AvatarFallback>
-                </Avatar>
-                <div>
-                  <p className="font-medium text-black">Михаил Иванов</p>
-                  <p className="text-[#787878]">Админ</p>
+              <div className="group relative ml-6">
+                <button
+                  type="button"
+                  className="flex items-center gap-3 rounded-md px-2 py-1 text-left hover:bg-muted/60 focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+                  aria-label="Профиль пользователя"
+                >
+                  <Avatar className="rounded-md border bg-[#EAEAEC]">
+                    <AvatarImage src="/avatar.png" alt="Михаил Иванов" />
+                    <AvatarFallback className="rounded-md bg-[#EAEAEC] text-black">
+                      <UserRound />
+                    </AvatarFallback>
+                  </Avatar>
+                  <div>
+                    <p className="font-medium text-black">Михаил Иванов</p>
+                    <p className="text-[#787878]">Админ</p>
+                  </div>
+                </button>
+
+                <div className="pointer-events-none absolute top-full right-0 z-50 pt-2 opacity-0 transition-opacity group-hover:pointer-events-auto group-hover:opacity-100 group-focus-within:pointer-events-auto group-focus-within:opacity-100">
+                  <div className="w-36 rounded-md border bg-popover p-1 shadow-md">
+                    <Button
+                      variant="ghost"
+                      className="w-full justify-start"
+                      onClick={onLogout}
+                    >
+                      Выйти
+                    </Button>
+                  </div>
                 </div>
               </div>
-
-              <Button variant="ghost" onClick={onLogout} className="sr-only">
-                Выйти
-              </Button>
             </div>
           </header>
 
@@ -312,26 +326,30 @@ export const DashboardPage = ({ onLogout }: DashboardPageProps) => {
 
                   return (
                     <Card key={item.id} className="rounded-2xl">
-                      <CardContent className="space-y-5 p-5">
+                      <CardContent className="space-y-0 pt-0">
                         <div className="flex items-center gap-3">
-                          <span className="inline-flex items-center justify-center rounded-lg bg-muted px-2 py-2">
-                            <Icon className="size-4" />
+                          <span className="inline-flex items-center justify-center rounded-lg bg-muted">
+                            <Icon className="size-10 inline-flex rounded-lg bg-[#17171720] p-2" />
                           </span>
-                          <span className="text-4xl leading-none tracking-tight">
+                          <span className="text-2xl leading-none tracking-tight">
                             {item.lead}
                           </span>
                           {item.badge ? (
-                            <span className="rounded-full bg-emerald-100 px-2.5 py-1 text-sm font-medium text-emerald-700">
+                            <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-100 px-2.5 py-1 text-sm font-medium text-emerald-700">
+                              <span
+                                aria-hidden
+                                className="size-2 rounded-full bg-[#22C55E]"
+                              />
                               {item.badge}
                             </span>
                           ) : null}
                         </div>
 
-                        <div className="space-y-2">
-                          <p className="text-2xl font-semibold leading-none">
+                        <div className="space-y-2 pt-4">
+                          <p className="text-lg font-semibold leading-none">
                             {item.title}
                           </p>
-                          <p className="text-base text-muted-foreground">
+                          <p className="text-sm gap-2 flex text-muted-foreground">
                             <span className="font-medium text-foreground">
                               {item.subtitleLeft}
                             </span>{" "}
@@ -360,7 +378,7 @@ export const DashboardPage = ({ onLogout }: DashboardPageProps) => {
                   {regulations.map((item, index) => (
                     <div
                       key={`${item.title}-${index}`}
-                      className="flex items-start justify-between gap-4"
+                      className="flex items-center justify-between gap-4"
                     >
                       <div>
                         <p className="text-lg font-medium leading-tight">
