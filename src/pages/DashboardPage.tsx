@@ -12,6 +12,7 @@ import {
 } from "@/features/dashboard/model";
 import { useSearchParams } from "react-router-dom";
 import { DashboardHeader } from "@/features/dashboard/components/DashboardHeader";
+import { DashboardFooter } from "@/features/dashboard/components/DashboardFooter";
 import { DashboardSidebar } from "@/features/dashboard/components/DashboardSidebar";
 import { EmployeesPageSection } from "@/features/dashboard/components/EmployeesPageSection";
 import { IncidentsSection } from "@/features/dashboard/components/IncidentsSection";
@@ -242,6 +243,7 @@ export const DashboardPage = ({ onLogout }: DashboardPageProps) => {
               <RegulationsSection rows={regulationTableRows} />
             )}
           </main>
+          <DashboardFooter />
 
           <FalseIncidentDialog
             open={Boolean(falseIncidentTarget)}
