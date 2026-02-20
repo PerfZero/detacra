@@ -30,19 +30,28 @@ export const OverviewSection = ({
                   <span className="inline-flex items-center justify-center rounded-lg bg-muted">
                     <Icon className="inline-flex size-10 rounded-lg bg-[#17171720] p-2" />
                   </span>
-                  <span className="text-2xl leading-none tracking-tight">{item.lead}</span>
+                  <span className="text-2xl leading-none tracking-tight">
+                    {item.lead}
+                  </span>
                   {item.badge ? (
                     <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-100 px-2.5 py-1 text-sm font-medium text-emerald-700">
-                      <span aria-hidden className="size-2 rounded-full bg-[#22C55E]" />
+                      <span
+                        aria-hidden
+                        className="size-2 rounded-full bg-[#22C55E]"
+                      />
                       {item.badge}
                     </span>
                   ) : null}
                 </div>
 
                 <div className="space-y-2 pt-4">
-                  <p className="text-lg font-semibold leading-none">{item.title}</p>
+                  <p className="text-lg font-semibold leading-none">
+                    {item.title}
+                  </p>
                   <p className="flex gap-2 text-sm text-muted-foreground">
-                    <span className="font-medium text-foreground">{item.subtitleLeft}</span>{" "}
+                    <span className="font-medium text-foreground">
+                      {item.subtitleLeft}
+                    </span>{" "}
                     {item.subtitleRight}
                   </p>
                 </div>
@@ -66,12 +75,19 @@ export const OverviewSection = ({
         </CardHeader>
         <CardContent className="space-y-5">
           {regulations.map((item, index) => (
-            <div key={`${item.title}-${index}`} className="flex items-center justify-between gap-4">
+            <div
+              key={`${item.title}-${index}`}
+              className="flex items-center justify-between gap-4"
+            >
               <div>
-                <p className="text-lg font-medium leading-tight">{item.title}</p>
-                <p className="mt-1 text-xs text-muted-foreground">{item.details}</p>
+                <p className="text-lg font-medium ">{item.title}</p>
+                <p className="mt-0.5 text-xs text-muted-foreground">
+                  {item.details}
+                </p>
               </div>
-              <span className="pt-0.5 whitespace-nowrap text-sm font-medium">{item.time}</span>
+              <span className="pt-0.5 whitespace-nowrap text-sm font-medium">
+                {item.time}
+              </span>
             </div>
           ))}
         </CardContent>
@@ -91,17 +107,24 @@ export const OverviewSection = ({
         </CardHeader>
         <CardContent className="space-y-5">
           {stockRows.map((item, index) => (
-            <div key={`${item.name}-${index}`} className="flex items-start justify-between gap-3">
+            <div
+              key={`${item.name}-${index}`}
+              className="flex items-start justify-between gap-3"
+            >
               <div className="min-w-0">
-                <p className="truncate text-sm font-medium leading-tight">{item.name}</p>
-                <p className="mt-1 text-xs text-muted-foreground">
+                <p className="truncate text-sm font-medium leading-tight">
+                  {item.name}
+                </p>
+                <p className="mt-0.5 text-xs text-muted-foreground">
                   Минимальный остаток: {item.minStock} штук
                 </p>
               </div>
               <p
                 className={cn(
                   "pt-0.5 whitespace-nowrap text-sm font-bold",
-                  item.showcaseStock >= 10 ? "text-[#D2933C]" : "text-[#E15241]",
+                  item.showcaseStock >= 10
+                    ? "text-[#D2933C]"
+                    : "text-[#E15241]",
                 )}
               >
                 {item.showcaseStock} шт.
