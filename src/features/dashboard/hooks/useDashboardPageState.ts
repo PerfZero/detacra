@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { falseIncidentReasonOptions } from "@/features/dashboard/model";
 import type { DashboardView, StockRow } from "@/features/dashboard/types";
 import { applyTheme, resolveInitialTheme } from "@/shared/theme/theme";
@@ -21,10 +21,13 @@ export const useDashboardPageState = () => {
     falseIncidentReasonOptions[0].id,
   );
 
+  useEffect(() => {
+    applyTheme(theme);
+  }, [theme]);
+
   const handleThemeToggle = () => {
     const nextTheme: Theme = theme === "dark" ? "light" : "dark";
     setTheme(nextTheme);
-    applyTheme(nextTheme);
   };
 
   const handleOpenReplenishDialog = (row: StockRow) => {

@@ -44,7 +44,7 @@ export const DashboardSidebar = ({
         : null;
 
   return (
-    <Sidebar className="bg-[#FAFAFA] dark:bg-card">
+    <Sidebar className="bg-sidebar">
       <SidebarHeader className="items-start p-3 pb-4">
         <img
           src="/logo.svg"
@@ -58,7 +58,7 @@ export const DashboardSidebar = ({
           <SidebarMenuItem>
             <SidebarMenuButton
               active={activeView === "dashboard"}
-              className="text-[#404040]"
+              className="text-sidebar-foreground"
               onClick={() => onSelectView("dashboard")}
             >
               <Settings className="size-4 shrink-0" />
@@ -91,7 +91,7 @@ export const DashboardSidebar = ({
                       <CollapsibleTrigger asChild>
                         <SidebarMenuButton
                           active={activeStockSubmenu !== null}
-                          className="text-[#404040]"
+                          className="text-sidebar-foreground"
                         >
                           <Icon className="size-4 shrink-0" />
                           {open ? (
@@ -115,7 +115,8 @@ export const DashboardSidebar = ({
                           <button
                             type="button"
                             className={cn(
-                              "flex w-full items-center rounded-md px-2.5 py-1.5 text-left text-sm text-[#404040] transition-colors hover:bg-muted/60",
+                              "flex w-full items-center rounded-md px-2.5 py-1.5 text-left text-sm transition-colors hover:bg-muted/60",
+                              "text-sidebar-foreground",
                               activeStockSubmenu === "showcase" &&
                                 "bg-muted font-medium",
                             )}
@@ -126,7 +127,8 @@ export const DashboardSidebar = ({
                           <button
                             type="button"
                             className={cn(
-                              "flex w-full items-center rounded-md px-2.5 py-1.5 text-left text-sm text-[#404040] transition-colors hover:bg-muted/60",
+                              "flex w-full items-center rounded-md px-2.5 py-1.5 text-left text-sm transition-colors hover:bg-muted/60",
+                              "text-sidebar-foreground",
                               activeStockSubmenu === "warehouse" &&
                                 "bg-muted font-medium",
                             )}
@@ -147,9 +149,9 @@ export const DashboardSidebar = ({
                     active={targetView ? activeView === targetView : false}
                     disabled={isDisabledItem}
                     className={cn(
-                      "text-[#404040]",
+                      "text-sidebar-foreground",
                       isDisabledItem &&
-                        "cursor-not-allowed text-[#404040]/45 hover:bg-transparent",
+                        "cursor-not-allowed text-sidebar-foreground/45 hover:bg-transparent",
                     )}
                     onClick={
                       !isDisabledItem && targetView
@@ -196,10 +198,10 @@ export const DashboardSidebar = ({
         <Button
           variant="secondary"
           className={cn(
-            "mt-3 w-full justify-center gap-2 text-[#404040]",
+            "mt-3 w-full justify-center gap-2 text-sidebar-foreground",
             activeView === "settings"
               ? "bg-muted hover:bg-muted"
-              : "bg-[#17171710] hover:bg-[#17171710]",
+              : "bg-muted/60 hover:bg-muted/70",
           )}
           onClick={() => onSelectView("settings")}
         >
