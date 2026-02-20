@@ -8,14 +8,9 @@ type LoginPageProps = {
     rememberMe: boolean,
   ) => Promise<void>;
   isLoading: boolean;
-  errorMessage: string | null;
 };
 
-export const LoginPage = ({
-  onLogin,
-  isLoading,
-  errorMessage,
-}: LoginPageProps) => {
+export const LoginPage = ({ onLogin, isLoading }: LoginPageProps) => {
   return (
     <div className="relative min-h-screen overflow-hidden bg-background px-4 py-8">
       <img
@@ -30,7 +25,6 @@ export const LoginPage = ({
           defaultEmail={env.defaultEmail}
           defaultPassword={env.defaultPassword}
           isLoading={isLoading}
-          errorMessage={errorMessage}
           onLogin={onLogin}
         />
       </div>

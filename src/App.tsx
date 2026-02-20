@@ -1,5 +1,7 @@
 import { useMemo, useState } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
+import { toast } from "sonner";
+import { Toaster } from "@/components/ui/sonner";
 import { createAuthModule } from "./features/auth/createAuthModule";
 import type { LoginCredentials } from "./features/auth/authTypes";
 import { DashboardPage } from "./pages/DashboardPage";
@@ -14,7 +16,6 @@ function App() {
     tokenStorage.getToken(),
   );
   const [isLoggingIn, setIsLoggingIn] = useState(false);
-  const [authError, setAuthError] = useState<string | null>(null);
 
   const handleLogin = async (
     credentials: LoginCredentials,
@@ -23,11 +24,11 @@ function App() {
     const normalizedEmail = credentials.email.trim();
 
     if (!normalizedEmail || !credentials.password) {
-      setAuthError("Введите email и пароль");
+      const message = "Введите email и пароль";
+      toast.error(message);
       return;
     }
 
-    setAuthError(null);
     setIsLoggingIn(true);
 
     try {
@@ -39,9 +40,9 @@ function App() {
       tokenStorage.saveToken(issuedToken, rememberMe);
       setToken(issuedToken);
     } catch (error) {
-      setAuthError(
-        error instanceof Error ? error.message : "Не удалось авторизоваться",
-      );
+      const message =
+        error instanceof Error ? error.message : "Не удалось авторизоваться";
+      toast.error(message);
     } finally {
       setIsLoggingIn(false);
     }
@@ -50,42 +51,40 @@ function App() {
   const handleLogout = () => {
     tokenStorage.clearToken();
     setToken(null);
-    setAuthError(null);
   };
 
   return (
-    <Routes>
-      <Route
-        path={LOGIN_ROUTE}
-        element={
-          token ? (
-            <Navigate to={DASHBOARD_ROUTE} replace />
-          ) : (
-            <LoginPage
-              onLogin={handleLogin}
-              isLoading={isLoggingIn}
-              errorMessage={authError}
-            />
-          )
-        }
-      />
-      <Route
-        path={DASHBOARD_ROUTE}
-        element={
-          token ? (
-            <DashboardPage onLogout={handleLogout} />
-          ) : (
-            <Navigate to={LOGIN_ROUTE} replace />
-          )
-        }
-      />
-      <Route
-        path="*"
-        element={
-          <Navigate to={token ? DASHBOARD_ROUTE : LOGIN_ROUTE} replace />
-        }
-      />
-    </Routes>
+    <>
+      <Routes>
+        <Route
+          path={LOGIN_ROUTE}
+          element={
+            token ? (
+              <Navigate to={DASHBOARD_ROUTE} replace />
+            ) : (
+              <LoginPage onLogin={handleLogin} isLoading={isLoggingIn} />
+            )
+          }
+        />
+        <Route
+          path={DASHBOARD_ROUTE}
+          element={
+            token ? (
+              <DashboardPage onLogout={handleLogout} />
+            ) : (
+              <Navigate to={LOGIN_ROUTE} replace />
+            )
+          }
+        />
+        <Route
+          path="*"
+          element={
+            <Navigate to={token ? DASHBOARD_ROUTE : LOGIN_ROUTE} replace />
+          }
+        />
+      </Routes>
+      <Toaster />
+    </>
   );
 }
 

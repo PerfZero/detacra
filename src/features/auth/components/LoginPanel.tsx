@@ -18,7 +18,6 @@ type LoginPanelProps = {
   defaultEmail: string;
   defaultPassword: string;
   isLoading: boolean;
-  errorMessage: string | null;
   onLogin: (
     credentials: LoginCredentials,
     rememberMe: boolean,
@@ -29,7 +28,6 @@ export const LoginPanel = ({
   defaultEmail,
   defaultPassword,
   isLoading,
-  errorMessage,
   onLogin,
 }: LoginPanelProps) => {
   const [email, setEmail] = useState(defaultEmail);
@@ -87,7 +85,10 @@ export const LoginPanel = ({
           </div>
 
           <div className="flex items-center justify-between gap-2 text-sm">
-            <Label htmlFor="remember" className="font-normal text-muted-foreground">
+            <Label
+              htmlFor="remember"
+              className="font-normal text-muted-foreground"
+            >
               <Checkbox
                 id="remember"
                 checked={rememberMe}
@@ -100,10 +101,6 @@ export const LoginPanel = ({
               Забыли пароль?
             </Button>
           </div>
-
-          {errorMessage && (
-            <p className="text-sm font-medium text-destructive">{errorMessage}</p>
-          )}
 
           <Button className="w-full" type="submit" disabled={isLoading}>
             {isLoading ? "Входим..." : "Войти"}

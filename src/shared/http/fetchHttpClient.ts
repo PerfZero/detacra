@@ -29,10 +29,40 @@ const parsePayload = async (response: Response) => {
   const contentType = response.headers.get("content-type") ?? "";
 
   if (contentType.includes("application/json")) {
-    return response.json();
+    try {
+      return await response.json();
+    } catch {
+      return null;
+    }
   }
 
-  return response.text();
+  try {
+    return await response.text();
+  } catch {
+    return null;
+  }
+};
+
+const resolveErrorMessage = (status: number, payload: unknown) => {
+  if (payload && typeof payload === "object") {
+    const record = payload as Record<string, unknown>;
+    const apiErrorMessage = record.errorMessage;
+    const message = record.message;
+
+    if (typeof apiErrorMessage === "string" && apiErrorMessage.trim()) {
+      return apiErrorMessage;
+    }
+
+    if (typeof message === "string" && message.trim()) {
+      return message;
+    }
+  }
+
+  if (typeof payload === "string" && payload.trim()) {
+    return payload;
+  }
+
+  return `Request failed with status ${status}`;
 };
 
 export class FetchHttpClient implements HttpClient {
@@ -55,7 +85,7 @@ export class FetchHttpClient implements HttpClient {
 
     if (!response.ok) {
       throw new HttpClientError(
-        `Request failed with status ${response.status}`,
+        resolveErrorMessage(response.status, payload),
         response.status,
         payload,
       );

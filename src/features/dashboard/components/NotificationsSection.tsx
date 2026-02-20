@@ -37,8 +37,10 @@ export const NotificationsSection = ({
   return (
     <section>
       <div className="rounded-2xl border bg-card text-card-foreground shadow-none">
-        <div className="block px-6 pt-6 pb-0">
-          <h3 className="text-xl font-semibold leading-none tracking-tight">Уведомления</h3>
+        <div className="block px-6 pt-6 pb-6">
+          <h3 className="text-xl font-semibold leading-none tracking-tight">
+            Уведомления
+          </h3>
         </div>
 
         <div className="space-y-4 px-0 pb-4">
@@ -101,7 +103,9 @@ export const NotificationsSection = ({
                       <ArrowUpDown className="size-4" />
                     </span>
                   </TableHead>
-                  <TableHead className="px-3 py-4 font-medium">Действие</TableHead>
+                  <TableHead className="px-3 py-4 font-medium">
+                    Действие
+                  </TableHead>
                 </TableRow>
               </TableHeader>
 
@@ -124,7 +128,9 @@ export const NotificationsSection = ({
                             statusToneClass[row.statusTone],
                           )}
                         >
-                          {row.status === "Решено" ? <Flag className="size-3.5" /> : null}
+                          {row.status === "Решено" ? (
+                            <Flag className="size-3.5" />
+                          ) : null}
                           {row.status}
                         </span>
                       </TableCell>
@@ -147,10 +153,19 @@ export const NotificationsSection = ({
                         </p>
                       </TableCell>
                       <TableCell className="min-w-[170px] px-3 py-3 text-sm whitespace-nowrap">
-                        <span className="text-foreground">{datePart ?? row.dateTime}</span>
-                        {timePart ? <span className="text-muted-foreground"> / {timePart}</span> : null}
+                        <span className="text-foreground">
+                          {datePart ?? row.dateTime}
+                        </span>
+                        {timePart ? (
+                          <span className="text-muted-foreground">
+                            {" "}
+                            / {timePart}
+                          </span>
+                        ) : null}
                       </TableCell>
-                      <TableCell className="px-3 py-3 text-sm font-semibold">{row.assignee}</TableCell>
+                      <TableCell className="px-3 py-3 text-sm font-semibold">
+                        {row.assignee}
+                      </TableCell>
                       <TableCell className="px-3 py-3">
                         <span className="inline-flex items-center gap-2 text-sm text-muted-foreground">
                           <span className="inline-flex rounded-full bg-muted p-2">
@@ -168,7 +183,10 @@ export const NotificationsSection = ({
                         ) : (
                           <span
                             aria-hidden
-                            className={cn("block h-8 w-14 rounded-md", mediaToneClass[row.mediaTone])}
+                            className={cn(
+                              "block h-8 w-14 rounded-md",
+                              mediaToneClass[row.mediaTone],
+                            )}
                           />
                         )}
                       </TableCell>
