@@ -1,22 +1,13 @@
+import { useEffect, useState } from "react";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import {
-  dashboardPoints,
+  buildDashboardModel,
+  type DashboardApiResponse,
+  emptyDashboardModel,
   falseIncidentReasonOptions,
-  incidentCards,
-  isSelectedPointOnline,
   mediaToneClass,
-  notificationRows,
-  overdueIncidentCards,
-  pageItems,
   regulationTableRows,
-  regulations,
-  selectedPointTitle,
   statusToneClass,
-  stockRows,
-  summaryCards,
-  userAvatar,
-  userFullName,
-  userRoleTitle,
 } from "@/features/dashboard/model";
 import { DashboardHeader } from "@/features/dashboard/components/DashboardHeader";
 import { DashboardSidebar } from "@/features/dashboard/components/DashboardSidebar";
@@ -33,7 +24,13 @@ type DashboardPageProps = {
   onLogout: () => void;
 };
 
+const DASHBOARD_INFO_URL =
+  "https://swiftcore.network/api/lk/dashboard-info?token=6c8d506e186b83afa4ae021cb7c7bf0b";
+
 export const DashboardPage = ({ onLogout }: DashboardPageProps) => {
+  const [dashboardModel, setDashboardModel] = useState(emptyDashboardModel);
+  const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
   const {
     activeView,
     theme,
@@ -54,6 +51,71 @@ export const DashboardPage = ({ onLogout }: DashboardPageProps) => {
     handleOpenResolvedIncidentDialog,
     handleCloseResolvedIncidentDialog,
   } = useDashboardPageState();
+
+  useEffect(() => {
+    const controller = new AbortController();
+
+    const loadDashboard = async () => {
+      setIsLoading(true);
+      setLoadError(null);
+
+      try {
+        const response = await fetch(DASHBOARD_INFO_URL, {
+          signal: controller.signal,
+        });
+
+        if (!response.ok) {
+          throw new Error(`Ошибка загрузки дашборда: ${response.status}`);
+        }
+
+        const payload = (await response.json()) as DashboardApiResponse;
+
+        if (!payload.result || !payload.data) {
+          throw new Error(
+            payload.errorMessage ?? payload.message ?? "Сервер вернул ошибку",
+          );
+        }
+
+        setDashboardModel(buildDashboardModel(payload.data));
+      } catch (error) {
+        if (controller.signal.aborted) {
+          return;
+        }
+
+        setLoadError(
+          error instanceof Error
+            ? error.message
+            : "Не удалось загрузить данные дашборда",
+        );
+      } finally {
+        if (!controller.signal.aborted) {
+          setIsLoading(false);
+        }
+      }
+    };
+
+    void loadDashboard();
+
+    return () => {
+      controller.abort();
+    };
+  }, []);
+
+  const {
+    pageItems,
+    dashboardPoints,
+    selectedPointTitle,
+    isSelectedPointOnline,
+    userFullName,
+    userRoleTitle,
+    userAvatar,
+    summaryCards,
+    regulations,
+    stockRows,
+    incidentCards,
+    overdueIncidentCards,
+    notificationRows,
+  } = dashboardModel;
 
   return (
     <div className="h-screen overflow-hidden bg-transparent">
@@ -78,7 +140,13 @@ export const DashboardPage = ({ onLogout }: DashboardPageProps) => {
           />
 
           <main className="flex-1 space-y-4 overflow-y-auto p-8">
-            {activeView === "dashboard" ? (
+            {isLoading ? (
+              <p className="text-sm text-muted-foreground">
+                Загружаем данные дашборда...
+              </p>
+            ) : loadError ? (
+              <p className="text-sm text-destructive">{loadError}</p>
+            ) : activeView === "dashboard" ? (
               <>
                 <OverviewSection
                   summaryCards={summaryCards}
