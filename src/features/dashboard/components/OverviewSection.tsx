@@ -45,9 +45,7 @@ export const OverviewSection = ({
                 </div>
 
                 <div className="space-y-2 pt-4">
-                  <p className="text-lg font-semibold leading-none">
-                    {item.title}
-                  </p>
+                  <p className="text-lg font-semibold ">{item.title}</p>
                   <p className="flex gap-2 text-sm text-muted-foreground">
                     <span className="font-medium text-foreground">
                       {item.subtitleLeft}
