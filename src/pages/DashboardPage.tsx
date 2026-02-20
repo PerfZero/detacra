@@ -107,7 +107,7 @@ type IncidentCard = {
   location?: string;
   timeAgo: string;
   description: string;
-  hasPreview: boolean;
+  pictureUrl: string | null;
 };
 
 type OverdueIncidentCard = {
@@ -253,7 +253,7 @@ const incidentCards: IncidentCard[] = dashboardData.active_incidents.map(
       location: item.places.length ? item.places.join(", ") : undefined,
       timeAgo: `#${item.id}`,
       description: item.description,
-      hasPreview: Boolean(item.picture),
+      pictureUrl: item.picture,
     };
   },
 );
@@ -727,9 +727,16 @@ export const DashboardPage = ({ onLogout }: DashboardPageProps) => {
                               ) : null}
                             </div>
 
-                            {item.hasPreview ? (
-                              <div className="flex items-center justify-center h-[226px]   bg-[#F3F3F3] pt-6"></div>
-                            ) : null}
+                            <div className="h-[226px] overflow-hidden bg-[#F3F3F3]">
+                              {item.pictureUrl ? (
+                                <img
+                                  src={item.pictureUrl}
+                                  alt={item.title}
+                                  loading="lazy"
+                                  className="h-full w-full object-cover"
+                                />
+                              ) : null}
+                            </div>
 
                             <p className="text-base text-muted-foreground p-6 ">
                               {item.description}
