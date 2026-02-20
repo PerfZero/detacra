@@ -138,7 +138,7 @@ export const RegulationsSection = ({ rows }: RegulationsSectionProps) => {
                       {row.timeInterval}
                     </TableCell>
                     <TableCell className="px-3 py-3">
-                      <span className="inline-flex items-center gap-2 text-base text-muted-foreground">
+                      <span className="inline-flex items-center gap-2 text-sm text-muted-foreground">
                         <span className="inline-flex rounded-full bg-muted p-2">
                           {row.photoRequired ? (
                             <Camera className="size-4" />

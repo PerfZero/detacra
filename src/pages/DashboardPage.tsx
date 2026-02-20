@@ -19,7 +19,9 @@ import { NotificationsSection } from "@/features/dashboard/components/Notificati
 import { NotificationsPageSection } from "@/features/dashboard/components/NotificationsPageSection";
 import { OverviewSection } from "@/features/dashboard/components/OverviewSection";
 import { RegulationsSection } from "@/features/dashboard/components/RegulationsSection";
+import { ShowcasePageSection } from "@/features/dashboard/components/ShowcasePageSection";
 import { SettingsPageSection } from "@/features/dashboard/components/SettingsPageSection";
+import { WarehousePageSection } from "@/features/dashboard/components/WarehousePageSection";
 import { FalseIncidentDialog } from "@/features/dashboard/components/dialogs/FalseIncidentDialog";
 import { ReplenishDialog } from "@/features/dashboard/components/dialogs/ReplenishDialog";
 import { ResolvedIncidentDialog } from "@/features/dashboard/components/dialogs/ResolvedIncidentDialog";
@@ -47,6 +49,14 @@ const resolveDashboardView = (rawView: string | null): DashboardView => {
 
   if (rawView === "settings") {
     return "settings";
+  }
+
+  if (rawView === "showcase") {
+    return "showcase";
+  }
+
+  if (rawView === "warehouse") {
+    return "warehouse";
   }
 
   return "dashboard";
@@ -224,6 +234,10 @@ export const DashboardPage = ({ onLogout }: DashboardPageProps) => {
               <EmployeesPageSection />
             ) : activeView === "settings" ? (
               <SettingsPageSection />
+            ) : activeView === "showcase" ? (
+              <ShowcasePageSection />
+            ) : activeView === "warehouse" ? (
+              <WarehousePageSection />
             ) : (
               <RegulationsSection rows={regulationTableRows} />
             )}

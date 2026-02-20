@@ -1,6 +1,12 @@
+import { useState } from "react";
 import { ChevronRight, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
 import {
   Sidebar,
   SidebarContent,
@@ -29,6 +35,13 @@ export const DashboardSidebar = ({
   onSelectView,
 }: DashboardSidebarProps) => {
   const { open } = useSidebar();
+  const [isStockMenuOpen, setIsStockMenuOpen] = useState(false);
+  const activeStockSubmenu =
+    activeView === "showcase"
+      ? "showcase"
+      : activeView === "warehouse"
+        ? "warehouse"
+        : null;
 
   return (
     <Sidebar className="bg-[#FAFAFA] dark:bg-card">
@@ -60,14 +73,88 @@ export const DashboardSidebar = ({
             {pageItems.map((item) => {
               const Icon = item.icon;
               const targetView = item.view;
+              const isDisabledItem =
+                item.label === "Аналитика" || item.label === "Аудио-аналитика";
+              const isStockMenuItem = item.label === "Витрина и склад";
+
+              if (isStockMenuItem) {
+                const isStockMenuExpanded =
+                  isStockMenuOpen || activeStockSubmenu !== null;
+
+                return (
+                  <Collapsible
+                    key={item.label}
+                    open={isStockMenuExpanded}
+                    onOpenChange={setIsStockMenuOpen}
+                  >
+                    <SidebarMenuItem>
+                      <CollapsibleTrigger asChild>
+                        <SidebarMenuButton
+                          active={activeStockSubmenu !== null}
+                          className="text-[#404040]"
+                        >
+                          <Icon className="size-4 shrink-0" />
+                          {open ? (
+                            <span className="flex-1 truncate">
+                              {item.label}
+                            </span>
+                          ) : null}
+                          {open ? (
+                            <ChevronRight
+                              className={cn(
+                                "size-4 transition-transform",
+                                isStockMenuExpanded && "rotate-90",
+                              )}
+                            />
+                          ) : null}
+                        </SidebarMenuButton>
+                      </CollapsibleTrigger>
+
+                      {open ? (
+                        <CollapsibleContent className="mt-1 ml-6 space-y-1">
+                          <button
+                            type="button"
+                            className={cn(
+                              "flex w-full items-center rounded-md px-2.5 py-1.5 text-left text-sm text-[#404040] transition-colors hover:bg-muted/60",
+                              activeStockSubmenu === "showcase" &&
+                                "bg-muted font-medium",
+                            )}
+                            onClick={() => onSelectView("showcase")}
+                          >
+                            Витрина
+                          </button>
+                          <button
+                            type="button"
+                            className={cn(
+                              "flex w-full items-center rounded-md px-2.5 py-1.5 text-left text-sm text-[#404040] transition-colors hover:bg-muted/60",
+                              activeStockSubmenu === "warehouse" &&
+                                "bg-muted font-medium",
+                            )}
+                            onClick={() => onSelectView("warehouse")}
+                          >
+                            Склад
+                          </button>
+                        </CollapsibleContent>
+                      ) : null}
+                    </SidebarMenuItem>
+                  </Collapsible>
+                );
+              }
 
               return (
                 <SidebarMenuItem key={item.label}>
                   <SidebarMenuButton
                     active={targetView ? activeView === targetView : false}
-                    className="text-[#404040]"
+                    disabled={isDisabledItem}
+                    className={cn(
+                      "text-[#404040]",
+                      isDisabledItem &&
+                        "cursor-not-allowed text-[#404040]/45 hover:bg-transparent",
+                    )}
                     onClick={
-                      targetView ? () => onSelectView(targetView) : undefined
+                      !isDisabledItem && targetView
+                        ? () => onSelectView(targetView)
+                        : undefined
                     }
                   >
                     <Icon className="size-4 shrink-0" />
@@ -78,9 +165,6 @@ export const DashboardSidebar = ({
                       <span className="rounded-full bg-muted px-1.5 text-xs">
                         {item.badge}
                       </span>
-                    ) : null}
-                    {open && item.label === "Витрина и склад" ? (
-                      <ChevronRight className="size-4" />
                     ) : null}
                   </SidebarMenuButton>
                 </SidebarMenuItem>

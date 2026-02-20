@@ -6,7 +6,9 @@ export type DashboardView =
   | "regulations"
   | "notifications"
   | "employees"
-  | "settings";
+  | "settings"
+  | "showcase"
+  | "warehouse";
 
 export type NotificationStatusTone = "green" | "amber" | "red" | "gray";
 export type NotificationMediaTone = "gray" | "blue" | "none";
