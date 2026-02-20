@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import type { DashboardView } from "@/features/dashboard/types";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import {
   buildDashboardModel,
@@ -9,12 +10,16 @@ import {
   regulationTableRows,
   statusToneClass,
 } from "@/features/dashboard/model";
+import { useSearchParams } from "react-router-dom";
 import { DashboardHeader } from "@/features/dashboard/components/DashboardHeader";
 import { DashboardSidebar } from "@/features/dashboard/components/DashboardSidebar";
+import { EmployeesPageSection } from "@/features/dashboard/components/EmployeesPageSection";
 import { IncidentsSection } from "@/features/dashboard/components/IncidentsSection";
 import { NotificationsSection } from "@/features/dashboard/components/NotificationsSection";
+import { NotificationsPageSection } from "@/features/dashboard/components/NotificationsPageSection";
 import { OverviewSection } from "@/features/dashboard/components/OverviewSection";
 import { RegulationsSection } from "@/features/dashboard/components/RegulationsSection";
+import { SettingsPageSection } from "@/features/dashboard/components/SettingsPageSection";
 import { FalseIncidentDialog } from "@/features/dashboard/components/dialogs/FalseIncidentDialog";
 import { ReplenishDialog } from "@/features/dashboard/components/dialogs/ReplenishDialog";
 import { ResolvedIncidentDialog } from "@/features/dashboard/components/dialogs/ResolvedIncidentDialog";
@@ -27,7 +32,29 @@ type DashboardPageProps = {
 const DASHBOARD_INFO_URL =
   "https://swiftcore.network/api/lk/dashboard-info?token=6c8d506e186b83afa4ae021cb7c7bf0b";
 
+const resolveDashboardView = (rawView: string | null): DashboardView => {
+  if (rawView === "regulations") {
+    return "regulations";
+  }
+
+  if (rawView === "notifications") {
+    return "notifications";
+  }
+
+  if (rawView === "employees") {
+    return "employees";
+  }
+
+  if (rawView === "settings") {
+    return "settings";
+  }
+
+  return "dashboard";
+};
+
 export const DashboardPage = ({ onLogout }: DashboardPageProps) => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const queryView = resolveDashboardView(searchParams.get("view"));
   const [dashboardModel, setDashboardModel] = useState(emptyDashboardModel);
   const [isLoading, setIsLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
@@ -101,6 +128,25 @@ export const DashboardPage = ({ onLogout }: DashboardPageProps) => {
     };
   }, []);
 
+  useEffect(() => {
+    if (activeView !== queryView) {
+      setActiveView(queryView);
+    }
+  }, [activeView, queryView, setActiveView]);
+
+  const handleSelectView = (view: DashboardView) => {
+    setActiveView(view);
+
+    const nextSearchParams = new URLSearchParams(searchParams);
+    if (view === "dashboard") {
+      nextSearchParams.delete("view");
+    } else {
+      nextSearchParams.set("view", view);
+    }
+
+    setSearchParams(nextSearchParams);
+  };
+
   const {
     pageItems,
     dashboardPoints,
@@ -123,7 +169,7 @@ export const DashboardPage = ({ onLogout }: DashboardPageProps) => {
         <DashboardSidebar
           pageItems={pageItems}
           activeView={activeView}
-          onSelectView={setActiveView}
+          onSelectView={handleSelectView}
         />
 
         <SidebarInset>
@@ -168,6 +214,16 @@ export const DashboardPage = ({ onLogout }: DashboardPageProps) => {
                   mediaToneClass={mediaToneClass}
                 />
               </>
+            ) : activeView === "notifications" ? (
+              <NotificationsPageSection
+                notificationRows={notificationRows}
+                statusToneClass={statusToneClass}
+                mediaToneClass={mediaToneClass}
+              />
+            ) : activeView === "employees" ? (
+              <EmployeesPageSection />
+            ) : activeView === "settings" ? (
+              <SettingsPageSection />
             ) : (
               <RegulationsSection rows={regulationTableRows} />
             )}

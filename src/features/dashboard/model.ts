@@ -46,6 +46,9 @@ type DashboardApiIncident = {
 type DashboardApiNotification = DashboardApiIncident & {
   device_title: string | null;
   staff: string;
+  created_at?: string;
+  date_time?: string;
+  datetime?: string;
 };
 
 export type DashboardApiData = {
@@ -162,12 +165,39 @@ const resolveNotificationStatus = (
   return { label: "Новое", tone: "green" };
 };
 
+const formatNotificationDateTime = (item: DashboardApiNotification) => {
+  const rawValue = item.created_at ?? item.date_time ?? item.datetime;
+
+  if (!rawValue) {
+    return "— / —";
+  }
+
+  const date = new Date(rawValue);
+
+  if (Number.isNaN(date.getTime())) {
+    return rawValue;
+  }
+
+  const day = String(date.getDate()).padStart(2, "0");
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const year = String(date.getFullYear()).slice(-2);
+  const hours = String(date.getHours()).padStart(2, "0");
+  const minutes = String(date.getMinutes()).padStart(2, "0");
+
+  return `${day}.${month}.${year} / ${hours}:${minutes}`;
+};
+
 const createPageItems = (notificationsBadge?: number): SidebarItem[] => [
   { label: "Регламенты", icon: ClipboardCheck, view: "regulations" },
   { label: "Аналитика", icon: ChartLine },
   { label: "Аудио-аналитика", icon: ChartColumn },
-  { label: "Уведомления", icon: Bell, badge: notificationsBadge },
-  { label: "Сотрудники", icon: Users },
+  {
+    label: "Уведомления",
+    icon: Bell,
+    badge: notificationsBadge,
+    view: "notifications",
+  },
+  { label: "Сотрудники", icon: Users, view: "employees" },
   { label: "Витрина и склад", icon: ListTodo },
 ];
 
@@ -289,7 +319,7 @@ export const buildDashboardModel = (
         workplace: item.places[0] ?? "—",
         incidentName: item.title,
         description: item.description,
-        dateTime: "— / —",
+        dateTime: formatNotificationDateTime(item),
         assignee: item.staff,
         typeLabel: getIncidentTypeLabel(incidentType),
         typeIcon: getIncidentTypeIcon(incidentType),

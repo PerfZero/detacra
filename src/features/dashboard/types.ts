@@ -1,7 +1,12 @@
 import type { LucideIcon } from "lucide-react";
 
 export type IncidentType = "camera" | "reglament" | "audio";
-export type DashboardView = "dashboard" | "regulations";
+export type DashboardView =
+  | "dashboard"
+  | "regulations"
+  | "notifications"
+  | "employees"
+  | "settings";
 
 export type NotificationStatusTone = "green" | "amber" | "red" | "gray";
 export type NotificationMediaTone = "gray" | "blue" | "none";

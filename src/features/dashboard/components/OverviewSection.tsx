@@ -34,7 +34,7 @@ export const OverviewSection = ({
                     {item.lead}
                   </span>
                   {item.badge ? (
-                    <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-100 px-2.5 py-1 text-sm font-medium text-emerald-700">
+                    <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-100 px-2.5 py-1 text-xs font-medium text-emerald-700">
                       <span
                         aria-hidden
                         className="size-2 rounded-full bg-[#22C55E]"

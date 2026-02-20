@@ -111,7 +111,13 @@ export const DashboardSidebar = ({
 
         <Button
           variant="secondary"
-          className="mt-3 w-full justify-center gap-2 bg-[#17171710] text-[#404040] hover:bg-[#17171710]"
+          className={cn(
+            "mt-3 w-full justify-center gap-2 text-[#404040]",
+            activeView === "settings"
+              ? "bg-muted hover:bg-muted"
+              : "bg-[#17171710] hover:bg-[#17171710]",
+          )}
+          onClick={() => onSelectView("settings")}
         >
           <Settings className="size-4" />
           {open ? "Настройки" : null}
