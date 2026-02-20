@@ -78,7 +78,12 @@ export const OverviewSection = ({
               className="flex items-center justify-between gap-4"
             >
               <div>
-                <p className="text-lg font-medium ">{item.title}</p>
+                <p
+                  className="text-base
+font-medium "
+                >
+                  {item.title}
+                </p>
                 <p className="mt-0.5 text-xs text-muted-foreground">
                   {item.details}
                 </p>
@@ -110,7 +115,10 @@ export const OverviewSection = ({
               className="flex items-start justify-between gap-3"
             >
               <div className="min-w-0">
-                <p className="truncate text-sm font-medium leading-tight">
+                <p
+                  className="truncate text-base
+font-medium leading-tight"
+                >
                   {item.name}
                 </p>
                 <p className="mt-0.5 text-xs text-muted-foreground">
