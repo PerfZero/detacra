@@ -7,7 +7,7 @@ export const createAuthModule = () => {
   const httpClient = new FetchHttpClient()
 
   return {
-    authService: new ApiAuthService(httpClient, env.authApiUrl),
+    authService: new ApiAuthService(httpClient, `${env.apiBaseUrl}/auth`),
     tokenStorage: new BrowserTokenStorage(),
   }
 }

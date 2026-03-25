@@ -27,13 +27,12 @@ import { FalseIncidentDialog } from "@/features/dashboard/components/dialogs/Fal
 import { ReplenishDialog } from "@/features/dashboard/components/dialogs/ReplenishDialog";
 import { ResolvedIncidentDialog } from "@/features/dashboard/components/dialogs/ResolvedIncidentDialog";
 import { useDashboardPageState } from "@/features/dashboard/hooks/useDashboardPageState";
+import { env } from "@/config/env";
 
 type DashboardPageProps = {
   onLogout: () => void;
 };
 
-const DASHBOARD_INFO_URL =
-  "https://swiftcore.network/api/lk/dashboard-info?token=6c8d506e186b83afa4ae021cb7c7bf0b";
 
 const resolveDashboardView = (rawView: string | null): DashboardView => {
   if (rawView === "regulations") {
@@ -98,8 +97,13 @@ export const DashboardPage = ({ onLogout }: DashboardPageProps) => {
       setLoadError(null);
 
       try {
-        const response = await fetch(DASHBOARD_INFO_URL, {
+        const token =
+          localStorage.getItem("detectra_auth_token") ??
+          sessionStorage.getItem("detectra_auth_token");
+
+        const response = await fetch(`${env.apiBaseUrl}/dashboard-info`, {
           signal: controller.signal,
+          headers: token ? { Authorization: `Bearer ${token}` } : undefined,
         });
 
         if (!response.ok) {
